@@ -22,6 +22,8 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import mx.edu.itlp.Datos.Restaurante;
+import mx.edu.itlp.Datos.RestauranteAdapter;
 import mx.edu.itlp.WebService.*;
 
 public class MainActivity extends AppCompatActivity implements WebServiceListener {
@@ -40,17 +42,8 @@ public class MainActivity extends AppCompatActivity implements WebServiceListene
 
     public void BuscarRestaurantes() {
         WebService Cliente = new WebService(this);
-        //Cliente.obtenerRestaurante();
+        Cliente.obtenerRestaurante();
         Cliente.CallLogin();
-    }
-
-    @Override
-    public void onIniciar() {
-    }
-
-    @Override
-    public void onActualizar() {
-
     }
 
     @Override
@@ -62,7 +55,8 @@ public class MainActivity extends AppCompatActivity implements WebServiceListene
     public void onTerminar(Object Resultado) {
         if (Resultado != null) {
             Gson gson = new Gson();
-            Type tipoListaRestaurante = new TypeToken<List<Restaurante>>() {}.getType();
+            Type tipoListaRestaurante = new TypeToken<List<Restaurante>>() {
+            }.getType();
             List<Restaurante> res = gson.fromJson((String) Resultado, tipoListaRestaurante);
             RestauranteAdapter AdaptadorRes = new RestauranteAdapter(res, this);
             ListaDeRestaurantes.setAdapter(AdaptadorRes);

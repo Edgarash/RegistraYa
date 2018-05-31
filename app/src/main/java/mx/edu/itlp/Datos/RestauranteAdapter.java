@@ -1,4 +1,4 @@
-package mx.edu.itlp.WebService;
+package mx.edu.itlp.Datos;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -38,6 +38,7 @@ public class RestauranteAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {

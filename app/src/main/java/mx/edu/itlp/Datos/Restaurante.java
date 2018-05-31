@@ -1,4 +1,4 @@
-package mx.edu.itlp.WebService;
+package mx.edu.itlp.Datos;
 
 public class Restaurante {
     int ID;
