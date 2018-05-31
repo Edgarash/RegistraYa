@@ -6,6 +6,7 @@
     $Server = new soap_server();
         #Encoding
         $Server->soap_defencoding = 'UTF-8';
+        
         $Server->configureWSDL('ServicioWeb', 'RegistraYA');
 
     #Registrando los Servicios

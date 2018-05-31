@@ -1,10 +1,18 @@
 package mx.edu.itlp.registraya;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -30,9 +38,10 @@ public class MainActivity extends AppCompatActivity implements WebServiceListene
         BuscarRestaurantes();
     }
 
-    private void BuscarRestaurantes() {
+    public void BuscarRestaurantes() {
         WebService Cliente = new WebService(this);
-        Cliente.obtenerRestaurante();
+        //Cliente.obtenerRestaurante();
+        Cliente.CallLogin();
     }
 
     @Override
@@ -58,8 +67,7 @@ public class MainActivity extends AppCompatActivity implements WebServiceListene
             RestauranteAdapter AdaptadorRes = new RestauranteAdapter(res, this);
             ListaDeRestaurantes.setAdapter(AdaptadorRes);
         } else {
-            Snackbar.make(Barrita, "ERROR", Snackbar.LENGTH_LONG).show();
-
+            Snackbar.make(Barrita, "Hubo un error al conectar con la base de datos", Snackbar.LENGTH_LONG).show();
         }
     }
 }

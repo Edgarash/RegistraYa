@@ -1,6 +1,10 @@
 package mx.edu.itlp.WebService;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.os.AsyncTask;
+import android.os.Bundle;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -16,16 +20,22 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.sql.Time;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 
 public class WebService extends AsyncTask<Void, Void, Object> {
 
-    public static final String OPERACION_obtenerRestaurantes = "obtenerRestaurantes";
-    public static final String NOMBRE_WEB_SERVICE = "WebService.php";
-    public static final String WSDL_TARGET_NAMESPACE = CONSTANTES.DIRECCION_SERVIDOR;
-    public static final String DIRECCION_SOAP = WSDL_TARGET_NAMESPACE + NOMBRE_WEB_SERVICE + "?WSDL";
-    public static final String SOAP_ACTION_obtenerRestaurantes = WSDL_TARGET_NAMESPACE + OPERACION_obtenerRestaurantes;
-    private static final String CLAVE_WEB_SERVICE = "RegistraYAMovil";
+    String OPERACION_obtenerRestaurantes = "obtenerRestaurantes";
+    String NOMBRE_WEB_SERVICE = "WebService.php";
+    String WSDL_TARGET_NAMESPACE = CONSTANTES.DIRECCION_SERVIDOR;
+    String DIRECCION_SOAP = WSDL_TARGET_NAMESPACE + NOMBRE_WEB_SERVICE + "?WSDL";
+    String SOAP_ACTION_obtenerRestaurantes = WSDL_TARGET_NAMESPACE + OPERACION_obtenerRestaurantes;
+    //String CLAVE_WEB_SERVICE = "RegistraYAMovil";
+    String CLAVE_WEB_SERVICE = "cuestionario2018";
+
+    String IP_CHRIS = "http://192.168.70.29:8080/";
+    String WSDL2 = IP_CHRIS + "cuesWEB/webservices/serverCuesti.php?WSDL";
+    String DIRECCION_SOAP2 = WSDL2;
 
     SoapObject request;
     WebServiceListener Listener;
@@ -41,13 +51,22 @@ public class WebService extends AsyncTask<Void, Void, Object> {
         this.execute();
     }
 
+    public void CallLogin() {
+        request = new SoapObject(IP_CHRIS, "login");
+        this.Soap_action = IP_CHRIS + "cuesWEB/login";
+        request.addProperty("correo", "cg_0196@hotmail.com");
+        request.addProperty("contrasena", "12345");
+        this.execute();
+    }
+
     @Override
     protected Object doInBackground(Void... voids) {
         request.addProperty("PASSWS", CLAVE_WEB_SERVICE);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.dotNet=true;
         envelope.setOutputSoapObject(request);
-        HttpTransportSE androidHttpTransport = new HttpTransportSE(DIRECCION_SOAP, 90000);
+        //HttpTransportSE androidHttpTransport = new HttpTransportSE(DIRECCION_SOAP, 60000);
+        HttpTransportSE androidHttpTransport = new HttpTransportSE(DIRECCION_SOAP2, 60000);
         androidHttpTransport.debug = true;
         try {
             androidHttpTransport.call(this.Soap_action, envelope);
@@ -55,8 +74,10 @@ public class WebService extends AsyncTask<Void, Void, Object> {
             return Respuesta;
         } catch (IOException e1) {
             e1.printStackTrace();
+            this.Listener.onError();
         } catch (XmlPullParserException e3) {
             e3.printStackTrace();
+            this.Listener.onError();
         }
         return null;
     }
@@ -66,4 +87,3 @@ public class WebService extends AsyncTask<Void, Void, Object> {
         this.Listener.onTerminar(Resultado);
     }
 }
-
