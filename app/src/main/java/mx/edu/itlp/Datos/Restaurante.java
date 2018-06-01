@@ -1,10 +1,12 @@
 package mx.edu.itlp.Datos;
 
-public class Restaurante {
-    int ID;
+import java.io.Serializable;
+
+public class Restaurante implements Serializable {
+    private int ID;
     String Nombre;
     String Colonia;
-    double Latitud, Longitud;
+    private double Latitud, Longitud;
     String HorarioApertura, HorarioCierre;
 
     public Restaurante(int ID, String Nombre, String Colonia,
@@ -17,5 +19,29 @@ public class Restaurante {
         this.Longitud = Longitud;
         this.HorarioApertura = HorarioApertura;
         this.HorarioCierre = HorarioCierre;
+    }
+
+    public double getLatitud() {
+        return Latitud;
+    }
+
+    public double getLongitud() {
+        return Longitud;
+    }
+
+    public String getNombre() {
+        return Nombre;
+    }
+
+    public String getColonia() {
+        return Colonia;
+    }
+
+    public String getHorarioApertura() {
+        return HorarioApertura;
+    }
+
+    public String getHorarioCierre() {
+        return HorarioCierre;
     }
 }

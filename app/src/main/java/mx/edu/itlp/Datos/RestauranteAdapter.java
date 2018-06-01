@@ -13,6 +13,7 @@ import java.util.List;
 
 import mx.edu.itlp.registraya.MapsActivity;
 import mx.edu.itlp.registraya.R;
+import mx.edu.itlp.registraya.ScrollingRestauranteActivity;
 
 public class RestauranteAdapter extends BaseAdapter {
     public List<Restaurante> Restaurantes;
@@ -57,9 +58,8 @@ public class RestauranteAdapter extends BaseAdapter {
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), MapsActivity.class);
-                intent.putExtra("Latitud", temp.Latitud);
-                intent.putExtra("Longitud", temp.Longitud);
+                Intent intent = new Intent(v.getContext(), ScrollingRestauranteActivity.class);
+                intent.putExtra("Restaurante", temp);
                 v.getContext().startActivity(intent);
             }
         });

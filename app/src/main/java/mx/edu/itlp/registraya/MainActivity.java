@@ -43,12 +43,11 @@ public class MainActivity extends AppCompatActivity implements WebServiceListene
     public void BuscarRestaurantes() {
         WebService Cliente = new WebService(this);
         Cliente.obtenerRestaurante();
-        Cliente.CallLogin();
     }
 
     @Override
     public void onError() {
-
+        BuscarRestaurantes();
     }
 
     @Override
@@ -62,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements WebServiceListene
             ListaDeRestaurantes.setAdapter(AdaptadorRes);
         } else {
             Snackbar.make(Barrita, "Hubo un error al conectar con la base de datos", Snackbar.LENGTH_LONG).show();
+            BuscarRestaurantes();
         }
     }
 }

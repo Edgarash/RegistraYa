@@ -30,12 +30,7 @@ public class WebService extends AsyncTask<Void, Void, Object> {
     String WSDL_TARGET_NAMESPACE = CONSTANTES.DIRECCION_SERVIDOR;
     String DIRECCION_SOAP = WSDL_TARGET_NAMESPACE + NOMBRE_WEB_SERVICE + "?WSDL";
     String SOAP_ACTION_obtenerRestaurantes = WSDL_TARGET_NAMESPACE + OPERACION_obtenerRestaurantes;
-    //String CLAVE_WEB_SERVICE = "RegistraYAMovil";
-    String CLAVE_WEB_SERVICE = "cuestionario2018";
-
-    String IP_CHRIS = "http://192.168.70.29:8080/";
-    String WSDL2 = IP_CHRIS + "cuesWEB/webservices/serverCuesti.php?WSDL";
-    String DIRECCION_SOAP2 = WSDL2;
+    String CLAVE_WEB_SERVICE = "RegistraYAMovil";
 
     SoapObject request;
     WebServiceListener Listener;
@@ -51,22 +46,13 @@ public class WebService extends AsyncTask<Void, Void, Object> {
         this.execute();
     }
 
-    public void CallLogin() {
-        request = new SoapObject(IP_CHRIS, "login");
-        this.Soap_action = IP_CHRIS + "cuesWEB/login";
-        request.addProperty("correo", "cg_0196@hotmail.com");
-        request.addProperty("contrasena", "12345");
-        this.execute();
-    }
-
     @Override
     protected Object doInBackground(Void... voids) {
         request.addProperty("PASSWS", CLAVE_WEB_SERVICE);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.dotNet=true;
         envelope.setOutputSoapObject(request);
-        //HttpTransportSE androidHttpTransport = new HttpTransportSE(DIRECCION_SOAP, 60000);
-        HttpTransportSE androidHttpTransport = new HttpTransportSE(DIRECCION_SOAP2, 60000);
+        HttpTransportSE androidHttpTransport = new HttpTransportSE(DIRECCION_SOAP, 60000);
         androidHttpTransport.debug = true;
         try {
             androidHttpTransport.call(this.Soap_action, envelope);
