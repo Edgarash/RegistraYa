@@ -6,6 +6,28 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+    </style>
+
+    <style name="TemaLogin" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:colorForeground">@color/foreground_material_light</item>
+    </style>
+
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="PruebaNegro" parent="AppTheme" >
+        <item name="android:colorBackground">@color/black</item>
+    </style>
+
+    <style name="Barra" parent="AppTheme">
+        <item name="colorAccent">@color/nuevo</item>
+        <item name="android:textColorHint">@color/black</item>
+
     </style>
 
     <style name="Scroll_Restaurantes" parent="AppTheme">
