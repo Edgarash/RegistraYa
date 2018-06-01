@@ -1,5 +1,6 @@
 package mx.edu.itlp.registraya;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
@@ -87,9 +88,11 @@ public class NavigatorActivity extends AppCompatActivity
                 fragments[1] = Activity;
             } else Activity = fragments[1];
         } else if (id == R.id.nav_slideshow) {
-
+            Intent temp = new Intent(getApplicationContext(), RegistrarActivity.class);
+            startActivity(temp);
         } else if (id == R.id.nav_manage) {
-
+            Intent temp = new Intent(getApplicationContext(), Reservar.class);
+            startActivity(temp);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

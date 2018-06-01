@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context="mx.edu.itlp.registraya.RegistrarActivity">
 
     <android.support.v7.widget.Toolbar
@@ -13,6 +15,7 @@
         android:layout_height="105dp"
         android:background="@drawable/tool4"
         android:minHeight="?attr/actionBarSize">
+
 
         <LinearLayout
             android:layout_width="match_parent"

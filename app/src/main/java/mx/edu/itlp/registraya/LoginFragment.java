@@ -3,11 +3,19 @@ package mx.edu.itlp.registraya;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import mx.edu.itlp.WebService.WebService;
+import mx.edu.itlp.WebService.WebServiceListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,12 +25,16 @@ import android.widget.TextView;
  * Use the {@link LoginFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements View.OnClickListener, WebServiceListener {
+    EditText Correo;
+    EditText Contraseña;
+    Button Entrar, Registrar;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     View vista;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -65,15 +77,15 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Correo.findViewById(R.id.email);
+        Contraseña.findViewById(R.id.Password);
+        Entrar.findViewById(R.id.btnLogin);
+        Registrar.findViewById(R.id.btnSignIn);
+        Entrar.setOnClickListener(this);
+        Registrar.setOnClickListener(this);
         vista = inflater.inflate(R.layout.activity_login, container, false);
         return vista;
-    }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -92,6 +104,35 @@ public class LoginFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onClick(View v) {
+        WebService cliente = new WebService(this);
+        cliente.HacerLogin(Correo.getText().toString(), Contraseña.getText().toString());
+    }
+
+    @Override
+    public void onError() {
+        Snackbar.make(Registrar, "Error en el servidor.", Snackbar.LENGTH_INDEFINITE);
+    }
+
+    @Override
+    public void onTerminar(Object Resultado) {
+        if (Resultado != null) {
+            String Res = (String) Resultado;
+            if (Res.substring(0, 5).equals("ERROR")) {
+                String noError = Res.substring(6, 9);
+                String msgError = Res.substring(10);
+
+                Snackbar.make(Registrar, msgError, Snackbar.LENGTH_INDEFINITE).show();
+            } else {
+                Toast.makeText(getContext(), Res, Toast.LENGTH_LONG).show();
+                mListener.onFragmentInteraction(Res);
+            }
+        } else {
+            Snackbar.make(Entrar, "No hubo respuesta del servidor", Snackbar.LENGTH_INDEFINITE);
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -104,6 +145,6 @@ public class LoginFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Object Objeto);
     }
 }

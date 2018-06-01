@@ -2,6 +2,7 @@ package mx.edu.itlp.registraya;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -23,7 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import mx.edu.itlp.Datos.Restaurante;
 
-public class ScrollingRestauranteActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class ScrollingRestauranteActivity extends AppCompatActivity implements OnMapReadyCallback, LoginFragment.OnFragmentInteractionListener {
     private GoogleMap mMap;
     Restaurante restaurante;
 
@@ -80,5 +81,10 @@ public class ScrollingRestauranteActivity extends AppCompatActivity implements O
                         icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
         float ZoomLevel = 16;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Marker, ZoomLevel));
+    }
+
+    @Override
+    public void onFragmentInteraction(Object Usuario) {
+
     }
 }

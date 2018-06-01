@@ -32,6 +32,13 @@ public class WebService extends AsyncTask<Void, Void, Object> {
     String SOAP_ACTION_obtenerRestaurantes = WSDL_TARGET_NAMESPACE + OPERACION_obtenerRestaurantes;
     String CLAVE_WEB_SERVICE = "RegistraYAMovil";
 
+    //registrar usuario
+    String SOAP_ACTION_registrarusuario = "registrarUsuario";
+
+    //hacer login
+
+    String SOAP_ACTION_login= "hacerLogin";
+
     SoapObject request;
     WebServiceListener Listener;
     String Soap_action;
@@ -44,6 +51,25 @@ public class WebService extends AsyncTask<Void, Void, Object> {
         request = new SoapObject(WSDL_TARGET_NAMESPACE, OPERACION_obtenerRestaurantes);
         this.Soap_action = SOAP_ACTION_obtenerRestaurantes;
         this.execute();
+    }
+
+    public void RegistrarUsuario( String Correo, String Contraseña, String Nombre, String Apellidos) {
+        Soap_action = SOAP_ACTION_registrarusuario;
+        request = new SoapObject(WSDL_TARGET_NAMESPACE, Soap_action);
+        request.addProperty("Correo", Correo);
+        request.addProperty("Password", Contraseña);
+        request.addProperty("Nombre", Nombre);
+        request.addProperty("Apellidos", Apellidos);
+
+        execute();
+    }
+
+    public void HacerLogin(String Correo, String Contraseña) {
+        Soap_action = SOAP_ACTION_login;
+        request = new SoapObject(WSDL_TARGET_NAMESPACE, Soap_action);
+        request.addProperty("Correo", Correo);
+        request.addProperty("Password", Contraseña);
+        execute();
     }
 
     @Override
