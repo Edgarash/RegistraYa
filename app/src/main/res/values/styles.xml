@@ -20,7 +20,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="PruebaNegro" parent="AppTheme" >
+    <style name="PruebaNegro" parent="AppTheme">
         <item name="android:colorBackground">@color/black</item>
     </style>
 
