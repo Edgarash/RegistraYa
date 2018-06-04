@@ -5,11 +5,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -33,8 +36,13 @@ import mx.edu.itlp.WebService.WebServiceListener;
  * Use the {@link getRestaurantes#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class getRestaurantes extends Fragment implements WebServiceListener {
+public class getRestaurantes extends Fragment implements WebServiceListener, View.OnClickListener {
     View vista;
+    ConstraintLayout btnReintentarParent;
+    Button btnReintentar;
+    ListView ListaDeRestaurantes;
+    ProgressBar Barrita;
+    WebService Cliente;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -84,7 +92,10 @@ public class getRestaurantes extends Fragment implements WebServiceListener {
         View v = view;
         ListaDeRestaurantes = v.findViewById(R.id.Restaurantes);
         Barrita = v.findViewById(R.id.progressBar);
-        ListaDeRestaurantes.setEmptyView(Barrita);
+        btnReintentarParent = v.findViewById(R.id.btnReintentarContenedor);
+        btnReintentar = v.findViewById(R.id.btnReintenetar);
+        ListaDeRestaurantes.setEmptyView(btnReintentarParent);
+        btnReintentar.setOnClickListener(this);
         BuscarRestaurantes();
     }
 
@@ -103,9 +114,6 @@ public class getRestaurantes extends Fragment implements WebServiceListener {
         }
     }
 
-    ListView ListaDeRestaurantes;
-    ProgressBar Barrita;
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -120,16 +128,17 @@ public class getRestaurantes extends Fragment implements WebServiceListener {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        Cliente.cancel(true);
     }
 
     public void BuscarRestaurantes() {
-        WebService Cliente = new WebService(this);
+        Cliente = new WebService(this);
         Cliente.obtenerRestaurante();
     }
 
     @Override
-    public void onError() {
-        BuscarRestaurantes();
+    public void onIniciar() {
+        showReintentar(false);
     }
 
     @Override
@@ -142,9 +151,32 @@ public class getRestaurantes extends Fragment implements WebServiceListener {
             RestauranteAdapter AdaptadorRes = new RestauranteAdapter(res, getContext());
             ListaDeRestaurantes.setAdapter(AdaptadorRes);
         } else {
-            Snackbar.make(Barrita, "Hubo un error al conectar con la base de datos", Snackbar.LENGTH_LONG).show();
-            BuscarRestaurantes();
+            Snackbar.make(ListaDeRestaurantes, "Hubo un error al conectar con la base de datos", Snackbar.LENGTH_INDEFINITE).show();
+            showReintentar(true);
         }
+    }
+
+
+
+    private void showReintentar(final boolean Mostrar) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                boolean x = Mostrar;
+                if (x) {
+                    Barrita.setVisibility(View.GONE);
+                    btnReintentar.setVisibility(View.VISIBLE);
+                } else {
+                    Barrita.setVisibility(View.VISIBLE);
+                    btnReintentar.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View v) {
+        BuscarRestaurantes();
     }
 
     /**

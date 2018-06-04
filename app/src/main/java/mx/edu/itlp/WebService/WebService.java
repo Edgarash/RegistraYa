@@ -25,77 +25,99 @@ import java.util.concurrent.TimeoutException;
 
 public class WebService extends AsyncTask<Void, Void, Object> {
 
-    String OPERACION_obtenerRestaurantes = "obtenerRestaurantes";
+    //Constantes
     String NOMBRE_WEB_SERVICE = "WebService.php";
-    String WSDL_TARGET_NAMESPACE = CONSTANTES.DIRECCION_SERVIDOR;
-    String DIRECCION_SOAP = WSDL_TARGET_NAMESPACE + NOMBRE_WEB_SERVICE + "?WSDL";
-    String SOAP_ACTION_obtenerRestaurantes = WSDL_TARGET_NAMESPACE + OPERACION_obtenerRestaurantes;
     String CLAVE_WEB_SERVICE = "RegistraYAMovil";
 
-    //registrar usuario
-    String SOAP_ACTION_registrarusuario = "registrarUsuario";
+    //Metodos Constantes
+    String getWSDL_TARGET_NAMESPACE() {
+        return CONSTANTES.getIpServidor();
+    }
 
-    //hacer login
+    String getDIRECCION_SOAP() {
+        return getWSDL_TARGET_NAMESPACE() + NOMBRE_WEB_SERVICE + "?wsdl";
+    }
 
-    String SOAP_ACTION_login= "hacerLogin";
+    String getSOAP_ACTION(String Action) {
+        OPERACION = Action;
+        return getWSDL_TARGET_NAMESPACE() + Action;
+    }
 
-    SoapObject request;
-    WebServiceListener Listener;
-    String Soap_action;
+    //Operaciones
+    String OPERACION_obtenerRestaurantes = "obtenerRestaurantes";
+    String OPERACION_registrarUsuario = "registrarUsuario";
+    String OPERACION_login = "hacerLogin";
+    String OPERACION_reservar = "hacerReservacion";
+
+    //Locales
+    private SoapObject REQUEST;
+    private WebServiceListener LISTENER;
+    private String SOAP_ACTION;
+    private String OPERACION;
 
     public WebService(WebServiceListener Listener) {
-        this.Listener = Listener;
+        this.LISTENER = Listener;
     }
 
     public void obtenerRestaurante() {
-        request = new SoapObject(WSDL_TARGET_NAMESPACE, OPERACION_obtenerRestaurantes);
-        this.Soap_action = SOAP_ACTION_obtenerRestaurantes;
+        this.SOAP_ACTION = getSOAP_ACTION(OPERACION_obtenerRestaurantes);
+        REQUEST = new SoapObject(getWSDL_TARGET_NAMESPACE(), OPERACION);
         this.execute();
     }
 
-    public void RegistrarUsuario( String Correo, String Contraseña, String Nombre, String Apellidos) {
-        Soap_action = SOAP_ACTION_registrarusuario;
-        request = new SoapObject(WSDL_TARGET_NAMESPACE, Soap_action);
-        request.addProperty("Correo", Correo);
-        request.addProperty("Password", Contraseña);
-        request.addProperty("Nombre", Nombre);
-        request.addProperty("Apellidos", Apellidos);
-
+    public void RegistrarUsuario(String Correo, String Contraseña, String Nombre, String Apellidos) {
+        this.SOAP_ACTION = getSOAP_ACTION(OPERACION_registrarUsuario);
+        REQUEST = new SoapObject(getWSDL_TARGET_NAMESPACE(), OPERACION);
+        REQUEST.addProperty("Correo", Correo);
+        REQUEST.addProperty("Password", Contraseña);
+        REQUEST.addProperty("Nombre", Nombre);
+        REQUEST.addProperty("Apellidos", Apellidos);
         execute();
     }
 
     public void HacerLogin(String Correo, String Contraseña) {
-        Soap_action = SOAP_ACTION_login;
-        request = new SoapObject(WSDL_TARGET_NAMESPACE, Soap_action);
-        request.addProperty("Correo", Correo);
-        request.addProperty("Password", Contraseña);
+        SOAP_ACTION = getSOAP_ACTION(OPERACION_login);
+        REQUEST = new SoapObject(getWSDL_TARGET_NAMESPACE(), OPERACION);
+        REQUEST.addProperty("Correo", Correo);
+        REQUEST.addProperty("Password", Contraseña);
+        execute();
+    }
+
+    public void hacerReservacion(String Correo, String Restaurante, String Fecha, String Mesa) {
+        SOAP_ACTION = getSOAP_ACTION(OPERACION_reservar);
+        REQUEST = new SoapObject(getWSDL_TARGET_NAMESPACE(), OPERACION);
+        REQUEST.addProperty("Correo", Correo);
+        REQUEST.addProperty("Restaurante", Restaurante);
+        REQUEST.addProperty("Fecha", Fecha);
+        REQUEST.addProperty("Mesa", Mesa);
         execute();
     }
 
     @Override
+    protected void onPreExecute() {
+        LISTENER.onIniciar();
+    }
+
+    @Override
     protected Object doInBackground(Void... voids) {
-        request.addProperty("PASSWS", CLAVE_WEB_SERVICE);
+        REQUEST.addProperty("PASSWS", CLAVE_WEB_SERVICE);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-        envelope.dotNet=true;
-        envelope.setOutputSoapObject(request);
-        HttpTransportSE androidHttpTransport = new HttpTransportSE(DIRECCION_SOAP, 60000);
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(REQUEST);
+        HttpTransportSE androidHttpTransport = new HttpTransportSE(getDIRECCION_SOAP(), 30000);
         androidHttpTransport.debug = true;
         try {
-            androidHttpTransport.call(this.Soap_action, envelope);
-            String Respuesta = (String)envelope.getResponse();
+            androidHttpTransport.call(SOAP_ACTION, envelope);
+            String Respuesta = (String) envelope.getResponse();
             return Respuesta;
-        } catch (IOException e1) {
+        } catch (IOException | XmlPullParserException e1) {
             e1.printStackTrace();
-            this.Listener.onError();
-        } catch (XmlPullParserException e3) {
-            e3.printStackTrace();
-            this.Listener.onError();
         }
         return null;
     }
 
     @Override
     protected void onPostExecute(Object Resultado) {
-        this.Listener.onTerminar(Resultado);
+        LISTENER.onTerminar(Resultado);
     }
 }

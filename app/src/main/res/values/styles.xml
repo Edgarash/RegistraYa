@@ -13,7 +13,10 @@
     <style name="TemaLogin" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:colorForeground">@color/foreground_material_light</item>
+        <item name="android:colorForeground">#FFFFFF</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:colorPrimary">#FFFFFF</item>
+        <item name="android:textColorPrimaryInverse">#FFFFFF</item>
         <item name="colorAccent">#ffffff</item>
         <item name="android:textColorHint">#ffffff</item>
     </style>

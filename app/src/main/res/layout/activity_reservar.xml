@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:theme="@style/AppTheme"
     android:background="#ffffff"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:theme="@style/AppTheme"
     tools:context="mx.edu.itlp.registraya.Reservar">
 
     <android.support.v7.widget.Toolbar
@@ -18,28 +18,28 @@
         android:background="@drawable/tool4"
         android:minHeight="?attr/actionBarSize">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:orientation="horizontal">
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="RESERVA YA"
-            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
-            android:textColor="#fff"
-            android:textSize="13pt"
-            tools:fontFamily="@font/amarante" />
+            android:layout_height="70dp"
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="RESERVA YA"
+                android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+                android:textColor="#fff"
+                android:textSize="13pt"
+                tools:fontFamily="@font/amarante" />
+
+        </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
 
     <LinearLayout
-        android:layout_width="350dp"
-        android:layout_height="467dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="24dp"
@@ -53,6 +53,7 @@
             tools:layout_editor_absoluteY="105dp">
 
             <TextView
+                android:id="@+id/NombreRestaurante"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -158,9 +159,9 @@
             style="@style/TextAppearance.AppCompat.Body1"
             android:layout_width="198dp"
             android:layout_height="57dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginLeft="0dp"
             android:layout_marginTop="25dp"
-            android:layout_gravity="center_horizontal"
             android:background="@drawable/background_signup"
             android:clickable="true"
             android:padding="16dp"
@@ -169,8 +170,15 @@
             android:textColor="#062743"
             android:textSize="18sp"
             android:textStyle="normal" />
-    </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="25dp"
+            android:indeterminateTint="#F00"
+            android:visibility="gone" />
+    </LinearLayout>
 
 
 </LinearLayout>

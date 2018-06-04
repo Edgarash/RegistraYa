@@ -2,14 +2,17 @@ package mx.edu.itlp.registraya;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.Fragment;
-import android.graphics.Color;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -21,12 +24,16 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
 import mx.edu.itlp.Datos.Restaurante;
+import mx.edu.itlp.Datos.Sesion;
+import mx.edu.itlp.Datos.Usuario;
 
-public class ScrollingRestauranteActivity extends AppCompatActivity implements OnMapReadyCallback, LoginFragment.OnFragmentInteractionListener {
+public class ScrollingRestauranteActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     Restaurante restaurante;
+    Button HacerReservacion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +43,22 @@ public class ScrollingRestauranteActivity extends AppCompatActivity implements O
         setSupportActionBar(toolbar);
         restaurante = (Restaurante) getIntent().getSerializableExtra("Restaurante");
         setTitle(restaurante.getNombre());
+        ((TextView) findViewById(R.id.NombreRestaurante)).setText(restaurante.getNombre());
+        ((TextView) findViewById(R.id.ColoniaRestaurante)).setText(restaurante.getColonia());
+        ((TextView) findViewById(R.id.HorarioAperturaRestaurante)).setText(restaurante.getHorarioApertura());
+        ((TextView) findViewById(R.id.HorarioCierreRestaurante)).setText(restaurante.getHorarioCierre());
+        ((Button) findViewById(R.id.btnReservar)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Sesion.isLoggedIn()) {
+                Intent temp = new Intent(getApplicationContext(), Reservar.class);
+                temp.putExtra("Restaurante", restaurante);
+                startActivity(temp);}else {
+                    Toast.makeText(getApplicationContext(), "No ha Iniciado Sesión", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        HacerReservacion = findViewById(R.id.btnReservar);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
         if (status == ConnectionResult.SUCCESS) {
@@ -51,8 +74,10 @@ public class ScrollingRestauranteActivity extends AppCompatActivity implements O
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                String Lat = String.valueOf(restaurante.getLatitud());
+                String Lon = String.valueOf(restaurante.getLongitud());
+                Uri uri = Uri.parse("geo:" + Lat + "," + Lon + "?z=16&q=" + Lat + "," + Lon + "(" + restaurante.getNombre() + ")");
+                startActivity(new Intent(Intent.ACTION_VIEW, uri));
             }
         });
     }
@@ -81,10 +106,5 @@ public class ScrollingRestauranteActivity extends AppCompatActivity implements O
                         icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
         float ZoomLevel = 16;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Marker, ZoomLevel));
-    }
-
-    @Override
-    public void onFragmentInteraction(Object Usuario) {
-
     }
 }

@@ -1,7 +1,10 @@
 <?php
     class Conexion {
         private $Usuario = "AdministradorRY";
+
         private $Servidor = "Servidor";
+        #private $Servidor = "Servidor";
+        
         private $Contraseña = "Admin";
         private $BD = "RegistraYA";
 

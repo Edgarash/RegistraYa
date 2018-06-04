@@ -5,23 +5,28 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/ver_restaurantes"
+            android:id="@+id/nav_ver_restaurantes"
             android:icon="@drawable/spoon_fork_crossed"
             android:title="@string/ver_restaurantes" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_sesion"
             android:icon="@drawable/user1"
             android:title="@string/login" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="Registrar" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
-    </group>
+            android:title="Hacer Reservacion" />
 
+        <item
+            android:id="@+id/acerca"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Acerca De:" />
+    </group>
+    <!--
     <item android:title="Communicate">
         <menu>
             <item
@@ -34,5 +39,5 @@
                 android:title="Send" />
         </menu>
     </item>
-
+    -->
 </menu>

@@ -154,6 +154,50 @@
         }
     }
 
+    $Server->Register(
+        'hacerReservacion',                 #Nombre del Método
+        array(
+            'Correo' => 'xsd:string',
+            'Restaurante' => 'xsd:string',
+            'Fecha' => 'xsd:string',
+            'Mesa' => 'xsd:string',
+            'PASSWS' => 'xsd:string'
+        ),                                  #Parámetros de Entrada  
+        array(
+            'return' => 'xsd:string'        #Parámetros de Salida
+        ),
+        'RegistraYA',                       #Namespace
+        'RegistraYA/hacerReservacion',      #SOAPaction
+        'rpc',                              #Style
+        'encoded',                          #Use
+        'Registra una Reservacion en la
+        Base de Datos.'                     #Documentacion
+    );
+
+    function hacerReservacion($Correo, $Restaurante, $Fecha, $Mesa, $PASSWS){
+        if ($PASSWS == 'RegistraYAMovil') {
+            if (validarCorreo($Correo)) {
+                $Link = ConectarBD();
+                $SQL = "CALL RegistrarReservacion(:Restaurante, :Correo, :Fecha, :Mesa);";
+                $STMT = $Link->prepare($SQL);
+                $STMT->bindParam(':Correo', $Correo);
+                $STMT->bindParam(':Restaurante', $Restaurante);
+                $STMT->bindParam(':Fecha', $Fecha);
+                $STMT->bindParam(':Mesa', $Mesa);
+                $STMT->execute();
+                if ($STMT->rowCount() > 0) {    //REGISTRO EXITOSO
+                    return "REGISTRO EXITOSO";
+                } else {    //NO SE PUDO REGISTRAR
+                    return getError(40);
+                }
+            } else {    //CORREO NO VALIDO
+                return getError(3, $Correo);
+            }
+        } else {    //PASSWS NO VALIDO
+            return getError(100, $PASSWS);
+        }
+    }
+
     function getError($noError, $Cadena) {
         switch ($noError) {
             case 1:
@@ -182,6 +226,9 @@
                 break;
             case 30:
                 return 'ERROR 030: APELLIDO "'.$Cadena.'" NO VÁLIDO.';
+                break;
+            case 40:
+                return 'ERROR 040: LA RESERVACIÓN NO SE PUDO COMPLETAR.';
                 break;
             case 100:
                 return 'ERROR 100: EL PASSWORD "'.$Cadena.'" NO ES CORRECTO.';

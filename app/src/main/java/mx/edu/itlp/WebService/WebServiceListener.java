@@ -1,6 +1,6 @@
 package mx.edu.itlp.WebService;
 
 public interface WebServiceListener {
-    void onError();
+    void onIniciar();
     void onTerminar(Object Resultado);
 }

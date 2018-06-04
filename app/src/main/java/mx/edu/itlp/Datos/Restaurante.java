@@ -21,6 +21,10 @@ public class Restaurante implements Serializable {
         this.HorarioCierre = HorarioCierre;
     }
 
+    public int getID() {
+        return ID;
+    }
+
     public double getLatitud() {
         return Latitud;
     }

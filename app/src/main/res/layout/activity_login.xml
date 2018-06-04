@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/new_login_gradients"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="18dp"
     android:paddingRight="18dp"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     android:theme="@style/TemaLogin">
 
     <LinearLayout
@@ -37,7 +37,8 @@
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:theme="@style/TemaLogin">
 
                     <android.support.v7.widget.AppCompatEditText
                         android:id="@+id/email"
@@ -50,7 +51,8 @@
                         android:hint="Correo"
                         android:inputType="textEmailAddress"
                         android:padding="12dp"
-                        android:textColorHint="#fff" />
+                        android:textColorHint="#fff"
+                        android:theme="@style/TemaLogin" />
                 </android.support.design.widget.TextInputLayout>
 
                 <View
@@ -61,6 +63,7 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:theme="@style/TemaLogin"
                     app:passwordToggleEnabled="true"
                     app:passwordToggleTint="#FFFFFF">
 
@@ -77,7 +80,8 @@
                         android:hint="Password"
                         android:inputType="textPassword"
                         android:maxLines="1"
-                        android:padding="16dp"/>
+                        android:padding="16dp"
+                        android:theme="@style/TemaLogin" />
                 </android.support.design.widget.TextInputLayout>
 
                 <View
@@ -85,21 +89,35 @@
                     android:layout_height="1dp"
                     android:background="#f9d7db" />
 
-                <Button
-                    android:id="@+id/btnLogin"
-                    style="@style/Base.TextAppearance.AppCompat.Body1"
+                <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:background="@drawable/background_login"
-                    android:clickable="true"
-                    android:padding="16dp"
-                    android:text="Iniciar Sesión"
-                    android:fontFamily="@font/amarante"
-                    android:textAllCaps="false"
-                    android:textColor="#062743"
-                    android:textSize="18sp"
-                    android:textStyle="normal" />
+                    android:layout_height="60dp"
+                    android:layout_marginTop="24dp">
+
+                    <Button
+                        android:id="@+id/btnLogin"
+                        style="@style/Base.TextAppearance.AppCompat.Body1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/background_login"
+                        android:fontFamily="@font/amarante"
+                        android:padding="16dp"
+                        android:text="Iniciar Sesión"
+                        android:textAllCaps="false"
+                        android:textColor="#062743"
+                        android:textSize="18sp"
+                        />
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="7dp"
+                        android:indeterminateTint="#FFF"
+                        android:visibility="gone"
+                        />
+
+                </android.support.constraint.ConstraintLayout>
 
                 <Button
                     android:id="@+id/btnSignIn"
@@ -109,9 +127,9 @@
                     android:layout_marginTop="16dp"
                     android:background="@drawable/background_signup"
                     android:clickable="true"
+                    android:fontFamily="@font/amarante"
                     android:padding="16dp"
                     android:text="Regístrate"
-                    android:fontFamily="@font/amarante"
                     android:textAllCaps="false"
                     android:textColor="#062743"
                     android:textSize="18sp"
