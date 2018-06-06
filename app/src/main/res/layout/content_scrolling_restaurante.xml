@@ -28,7 +28,8 @@
                 android:id="@+id/NombreRestaurante"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/text_margin"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
                 android:text="Nombre Restaurante" />
 
         </LinearLayout>
@@ -48,7 +49,8 @@
                 android:id="@+id/ColoniaRestaurante"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/text_margin"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
                 android:text="Colonia Restaurante" />
 
         </LinearLayout>
@@ -68,7 +70,8 @@
                 android:id="@+id/HorarioAperturaRestaurante"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/text_margin"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
                 android:text="Horario Apertura" />
 
         </LinearLayout>
@@ -88,7 +91,8 @@
                 android:id="@+id/HorarioCierreRestaurante"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/text_margin"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
                 android:text="Horario Cierre" />
 
         </LinearLayout>
@@ -97,8 +101,18 @@
             android:id="@+id/btnReservar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="30dp"
             android:text="@string/hacer_reservacion" />
+
+        <Button
+            android:id="@+id/verMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="10dp"
+            android:text="Ver Menu" />
 
     </LinearLayout>
 

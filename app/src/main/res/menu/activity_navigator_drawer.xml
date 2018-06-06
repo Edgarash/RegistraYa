@@ -12,12 +12,13 @@
             android:id="@+id/nav_sesion"
             android:icon="@drawable/user1"
             android:title="@string/login" />
+        <!--
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Registrar" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id{/nav_manage"
             android:icon="@drawable/ic_menu_manage"
             android:title="Hacer Reservacion" />
 
@@ -25,6 +26,7 @@
             android:id="@+id/acerca"
             android:icon="@drawable/ic_menu_manage"
             android:title="Acerca De:" />
+            -->
     </group>
     <!--
     <item android:title="Communicate">
