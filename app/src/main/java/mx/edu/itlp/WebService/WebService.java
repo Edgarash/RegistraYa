@@ -48,6 +48,7 @@ public class WebService extends AsyncTask<Void, Void, Object> {
     String OPERACION_registrarUsuario = "registrarUsuario";
     String OPERACION_login = "hacerLogin";
     String OPERACION_reservar = "hacerReservacion";
+    String OPERACION_buscarMenu = "getMenu";
 
     //Locales
     private SoapObject REQUEST;
@@ -90,6 +91,13 @@ public class WebService extends AsyncTask<Void, Void, Object> {
         REQUEST.addProperty("Restaurante", Restaurante);
         REQUEST.addProperty("Fecha", Fecha);
         REQUEST.addProperty("Mesa", Mesa);
+        execute();
+    }
+
+    public void buscarMenu(int ID) {
+        SOAP_ACTION = getSOAP_ACTION(OPERACION_buscarMenu);
+        REQUEST = new SoapObject(getWSDL_TARGET_NAMESPACE(), OPERACION);
+        REQUEST.addProperty("Restaurante", String.valueOf(ID));
         execute();
     }
 

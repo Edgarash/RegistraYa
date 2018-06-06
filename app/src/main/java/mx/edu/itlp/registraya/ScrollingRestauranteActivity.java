@@ -33,7 +33,7 @@ import mx.edu.itlp.Datos.Usuario;
 public class ScrollingRestauranteActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     Restaurante restaurante;
-    Button HacerReservacion;
+    Button HacerReservacion, verMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +51,20 @@ public class ScrollingRestauranteActivity extends AppCompatActivity implements O
             @Override
             public void onClick(View v) {
                 if (Sesion.isLoggedIn()) {
-                Intent temp = new Intent(getApplicationContext(), Reservar.class);
-                temp.putExtra("Restaurante", restaurante);
-                startActivity(temp);}else {
+                    Intent temp = new Intent(getApplicationContext(), Reservar.class);
+                    temp.putExtra("Restaurante", restaurante);
+                    startActivity(temp);
+                } else {
                     Toast.makeText(getApplicationContext(), "No ha Iniciado Sesión", Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+        ((Button) findViewById(R.id.verMenu)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent temp = new Intent(getApplicationContext(), MenuActivity.class);
+                temp.putExtra("Restaurante", restaurante);
+                startActivity(temp);
             }
         });
         HacerReservacion = findViewById(R.id.btnReservar);

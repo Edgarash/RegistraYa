@@ -38,6 +38,7 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColorHint="#FFF"
                     android:theme="@style/TemaLogin">
 
                     <android.support.v7.widget.AppCompatEditText
@@ -51,7 +52,8 @@
                         android:hint="Correo"
                         android:inputType="textEmailAddress"
                         android:padding="12dp"
-                        android:textColorHint="#fff"
+                        android:textColor="#FFF"
+                        android:textColorHint="#FFF"
                         android:theme="@style/TemaLogin" />
                 </android.support.design.widget.TextInputLayout>
 
@@ -63,6 +65,7 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColorHint="#FFF"
                     android:theme="@style/TemaLogin"
                     app:passwordToggleEnabled="true"
                     app:passwordToggleTint="#FFFFFF">
@@ -81,6 +84,8 @@
                         android:inputType="textPassword"
                         android:maxLines="1"
                         android:padding="16dp"
+                        android:textColor="#FFF"
+                        android:textColorHint="#FFF"
                         android:theme="@style/TemaLogin" />
                 </android.support.design.widget.TextInputLayout>
 
@@ -105,17 +110,15 @@
                         android:text="Iniciar Sesión"
                         android:textAllCaps="false"
                         android:textColor="#062743"
-                        android:textSize="18sp"
-                        />
+                        android:textSize="18sp" />
 
                     <ProgressBar
                         android:id="@+id/progressBar"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="7dp"
                         android:indeterminateTint="#FFF"
-                        android:visibility="gone"
-                        />
+                        android:padding="7dp"
+                        android:visibility="gone" />
 
                 </android.support.constraint.ConstraintLayout>
 

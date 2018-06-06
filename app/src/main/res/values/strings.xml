@@ -41,4 +41,8 @@
     <string name="apellidos">Apellidos</string>
     <string name="contrase_a">Contraseña</string>
     <string name="reg_strar">Regístrar</string>
+    <string name="postres">Postres</string>
+    <string name="bebidas">Bebidas</string>
+    <string name="platillos">Platillos</string>
+    <string name="entradas">Entradas</string>
 </resources>

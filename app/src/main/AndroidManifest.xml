@@ -72,6 +72,7 @@
             android:name=".cambiar_ip"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
+        <activity android:name=".MenuActivity"></activity>
     </application>
 
 </manifest>

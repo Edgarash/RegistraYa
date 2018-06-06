@@ -198,6 +198,49 @@
         }
     }
 
+    $Server->Register(
+        'getMenu',                          #Nombre del Método
+        array(
+            'Restaurante' => 'xsd:string',
+            'PASSWS' => 'xsd:string'
+        ),                                  #Parámetros de Entrada  
+        array(
+            'return' => 'xsd:string'        #Parámetros de Salida
+        ),
+        'RegistraYA',                       #Namespace
+        'RegistraYA/getMenu',               #SOAPaction
+        'rpc',                              #Style
+        'encoded',                          #Use
+        'Obtiene un menú de la base 
+        de datos.'                          #Documentacion
+    );
+
+    function getMenu($Restaurante, $PASSWS) {
+        if ($PASSWS == 'RegistraYAMovil') {
+            $Link = ConectarBD();
+            $SQL = "CALL getMenu(:ID);";
+            $STMT = $Link->prepare($SQL);
+            $STMT->bindParam(':ID', $Restaurante);
+            $STMT->execute();
+            if ($STMT->rowCount() > 0) {
+                $Object = array();
+                while ($Fila = $STMT->fetch()) {
+                    $Menu = new stdClass();
+                    $Menu->Nombre = $Fila['Nombre'];
+                    $Menu->Descripcion = $Fila['Descripcion'];
+                    $Menu->Precio = $Fila['Precio'];
+                    $Menu->Tipo = $Fila['Tipo'];
+                    $Object[] = $Menu;
+                }
+                return json_encode($Object);
+            } else {
+                return getError(50);
+            }
+        } else {
+            return getError(100, $PASSWS);
+        }
+    }
+
     function getError($noError, $Cadena) {
         switch ($noError) {
             case 1:
@@ -229,6 +272,9 @@
                 break;
             case 40:
                 return 'ERROR 040: LA RESERVACIÓN NO SE PUDO COMPLETAR.';
+                break;
+            case 50:
+                return 'ERROR 050: NO SE ENCONTRÓ EL MENÚ.';
                 break;
             case 100:
                 return 'ERROR 100: EL PASSWORD "'.$Cadena.'" NO ES CORRECTO.';

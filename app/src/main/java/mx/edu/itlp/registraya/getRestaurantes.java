@@ -150,6 +150,7 @@ public class getRestaurantes extends Fragment implements WebServiceListener, Vie
             List<Restaurante> res = gson.fromJson((String) Resultado, tipoListaRestaurante);
             RestauranteAdapter AdaptadorRes = new RestauranteAdapter(res, getContext());
             ListaDeRestaurantes.setAdapter(AdaptadorRes);
+            showReintentar(false);
         } else {
             Snackbar.make(ListaDeRestaurantes, "Hubo un error al conectar con la base de datos", Snackbar.LENGTH_INDEFINITE).show();
             showReintentar(true);
