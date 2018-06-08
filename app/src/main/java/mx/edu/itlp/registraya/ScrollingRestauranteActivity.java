@@ -51,6 +51,7 @@ public class ScrollingRestauranteActivity extends AppCompatActivity implements O
             @Override
             public void onClick(View v) {
                 if (Sesion.isLoggedIn()) {
+                    Sesion.setTarjetaRequerida(false);
                     Intent temp = new Intent(getApplicationContext(), Reservar.class);
                     temp.putExtra("Restaurante", restaurante);
                     startActivity(temp);

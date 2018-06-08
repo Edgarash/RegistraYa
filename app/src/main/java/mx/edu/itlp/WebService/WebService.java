@@ -9,6 +9,7 @@ import android.os.Bundle;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.kobjects.base64.Base64;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -21,6 +22,9 @@ import java.lang.reflect.Type;
 import java.sql.Time;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 
 public class WebService extends AsyncTask<Void, Void, Object> {
@@ -49,6 +53,7 @@ public class WebService extends AsyncTask<Void, Void, Object> {
     String OPERACION_login = "hacerLogin";
     String OPERACION_reservar = "hacerReservacion";
     String OPERACION_buscarMenu = "getMenu";
+    String OPERACION_getReservaciones = "getReservaciones";
 
     //Locales
     private SoapObject REQUEST;
@@ -70,7 +75,8 @@ public class WebService extends AsyncTask<Void, Void, Object> {
         this.SOAP_ACTION = getSOAP_ACTION(OPERACION_registrarUsuario);
         REQUEST = new SoapObject(getWSDL_TARGET_NAMESPACE(), OPERACION);
         REQUEST.addProperty("Correo", Correo);
-        REQUEST.addProperty("Password", Contraseña);
+        String temp = encrypt(Contraseña);
+        REQUEST.addProperty("Password", temp);
         REQUEST.addProperty("Nombre", Nombre);
         REQUEST.addProperty("Apellidos", Apellidos);
         execute();
@@ -80,7 +86,8 @@ public class WebService extends AsyncTask<Void, Void, Object> {
         SOAP_ACTION = getSOAP_ACTION(OPERACION_login);
         REQUEST = new SoapObject(getWSDL_TARGET_NAMESPACE(), OPERACION);
         REQUEST.addProperty("Correo", Correo);
-        REQUEST.addProperty("Password", Contraseña);
+        String temp = encrypt(Contraseña);
+        REQUEST.addProperty("Password", temp);
         execute();
     }
 
@@ -98,6 +105,13 @@ public class WebService extends AsyncTask<Void, Void, Object> {
         SOAP_ACTION = getSOAP_ACTION(OPERACION_buscarMenu);
         REQUEST = new SoapObject(getWSDL_TARGET_NAMESPACE(), OPERACION);
         REQUEST.addProperty("Restaurante", String.valueOf(ID));
+        execute();
+    }
+
+    public void getReservaciones(String Correo) {
+        SOAP_ACTION = getSOAP_ACTION(OPERACION_getReservaciones);
+        REQUEST = new SoapObject(getWSDL_TARGET_NAMESPACE(), OPERACION);
+        REQUEST.addProperty("Restaurante", Correo);
         execute();
     }
 
@@ -127,5 +141,19 @@ public class WebService extends AsyncTask<Void, Void, Object> {
     @Override
     protected void onPostExecute(Object Resultado) {
         LISTENER.onTerminar(Resultado);
+    }
+
+    private static String encrypt(String input) {
+        String key = "Michell#5Michell";
+        byte[] crypted = null;
+        try {
+            SecretKeySpec skey = new SecretKeySpec(key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, skey);
+            crypted = cipher.doFinal(input.getBytes());
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        return new String(Base64.encode(crypted));
     }
 }

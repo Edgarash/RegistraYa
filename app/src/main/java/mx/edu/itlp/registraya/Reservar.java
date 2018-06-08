@@ -1,5 +1,6 @@
 package mx.edu.itlp.registraya;
 
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,12 +17,15 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+
+import com.google.android.gms.dynamic.DeferredLifecycleHelper;
 
 import java.util.Calendar;
 
@@ -39,7 +43,8 @@ public class Reservar extends AppCompatActivity implements View.OnClickListener,
     private static String Mesa;
 
     //Calendario para obtener fecha & hora
-    public final Calendar c = Calendar.getInstance();
+    public Calendar c = Calendar.getInstance();
+    Calendar fecha = Calendar.getInstance();
 
     //Fecha
     final int mes = c.get(Calendar.MONTH);
@@ -51,7 +56,7 @@ public class Reservar extends AppCompatActivity implements View.OnClickListener,
     final int minuto = c.get(Calendar.MINUTE);
 
     //Widgets
-    EditText etFecha, etHora;
+    TextView etFecha, etHora;
     ImageButton ibObtenerFecha, ibObtenerHora;
     Button btnRegistrar;
     WebService Cliente;
@@ -69,9 +74,9 @@ public class Reservar extends AppCompatActivity implements View.OnClickListener,
         setContentView(R.layout.activity_reservar);
 
         restaurante = (Restaurante) getIntent().getSerializableExtra("Restaurante");
-        ((TextView)findViewById(R.id.NombreRestaurante)).setText(restaurante.getNombre());
-        etFecha = (EditText) findViewById(R.id.et_mostrar_fecha_picker);
-        etHora = (EditText) findViewById(R.id.et_mostrar_hora_picker);
+        ((TextView) findViewById(R.id.NombreRestaurante)).setText(restaurante.getNombre());
+        etFecha = findViewById(R.id.et_mostrar_fecha_picker);
+        etHora = findViewById(R.id.et_mostrar_hora_picker);
 
         ibObtenerFecha = (ImageButton) findViewById(R.id.ib_obtener_fecha);
         ibObtenerHora = (ImageButton) findViewById(R.id.ib_obtener_hora);
@@ -106,19 +111,44 @@ public class Reservar extends AppCompatActivity implements View.OnClickListener,
                 obtenerHora();
                 break;
             case R.id.btnRegistrar:
-                if (Cliente != null)
-                    Cliente.cancel(true);
-                Cliente = new WebService(this);
-                String Correo = Sesion.getUsuario().getCorreo();
-                String Res = String.valueOf(restaurante.getID());
-                String Fecha = etFecha.getText().toString() + " " + etHora.getText().toString().substring(0, 5) + ":00";
-                Cliente.hacerReservacion(Correo, Res, Fecha, Mesa);
+                if (etFecha.getText().toString().isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "No se ha definido la fecha", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (etHora.getText().toString().isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "No se ha definido la hora", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (fecha.getTime().compareTo(new Date()) > 0) {
+                            if (Mesa == null || Mesa.equals("")) {
+                                Snackbar.make(btnRegistrar, "Por favor seleccione una mesa", Snackbar.LENGTH_LONG).show();
+                            } else {
+                                String Fecha = etFecha.getText().toString() + " " + etHora.getText().toString().substring(0, 5) + ":00";
+                                if (Sesion.getTarjetaRequerida()) {
+                                    Intent t = new Intent(getApplicationContext(), Tarjetaregistro.class);
+                                    t.putExtra("Restaurante", restaurante);
+                                    t.putExtra("Fecha", Fecha);
+                                    t.putExtra("Mesa", Mesa);
+                                    startActivity(t);
+                                } else {
+                                    if (Cliente != null)
+                                        Cliente.cancel(true);
+                                    Cliente = new WebService(this);
+                                    String Correo = Sesion.getUsuario().getCorreo();
+                                    String Res = String.valueOf(restaurante.getID());
+                                    Cliente.hacerReservacion(Correo, Res, Fecha, Mesa);
+                                }
+                            }
+                        } else {
+                            Snackbar.make(btnRegistrar, "Por favor seleccione una fecha y hora válida", Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+                }
                 break;
         }
     }
 
 
     private void obtenerFecha() {
+        c = Calendar.getInstance();
         DatePickerDialog recogerFecha = new DatePickerDialog(this, R.style.TemaFecha, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -129,16 +159,16 @@ public class Reservar extends AppCompatActivity implements View.OnClickListener,
                 String mesFormateado = (mesActual < 10) ? CERO + String.valueOf(mesActual) : String.valueOf(mesActual);
 
                 etFecha.setText(year + "-" + mesFormateado + "-" + diaFormateado);
-
-
+                fecha.set(Calendar.YEAR, year);
+                fecha.set(Calendar.MONTH, month);
+                fecha.set(Calendar.DATE, dayOfMonth);
             }
-        }, anio, mes, dia);
-
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
         recogerFecha.show();
-
     }
 
     private void obtenerHora() {
+        c = Calendar.getInstance();
         TimePickerDialog recogerHora = new TimePickerDialog(this, R.style.TemaFecha, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -154,9 +184,11 @@ public class Reservar extends AppCompatActivity implements View.OnClickListener,
                 }
 
                 etHora.setText(horaFormateada + DOS_PUNTOS + minutoFormateado + " " + AM_PM);
+                fecha.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                fecha.set(Calendar.MINUTE, minute);
             }
 
-        }, hora, minuto, false);
+        }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
 
         recogerHora.show();
     }
@@ -194,7 +226,6 @@ public class Reservar extends AppCompatActivity implements View.OnClickListener,
                 return false;
             }
         });
-
     }
 
     @Override

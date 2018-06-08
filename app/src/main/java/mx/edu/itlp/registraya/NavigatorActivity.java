@@ -41,7 +41,7 @@ public class NavigatorActivity extends AppCompatActivity
     TextView Nombre, Correo;
     ImageView Imagen;
     NavigationView navigationView;
-    MenuItem IniciarSesion;
+    MenuItem IniciarSesion, Reservaciones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +57,7 @@ public class NavigatorActivity extends AppCompatActivity
         Correo = headerView.findViewById(R.id.CorreoUsuario);
         Imagen = headerView.findViewById(R.id.imageView);
         IniciarSesion = navigationView.getMenu().findItem(R.id.nav_sesion);
+        Reservaciones = navigationView.getMenu().findItem(R.id.nav_reservaciones);
         final Activity actTemp = this;
         Imagen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,9 +79,10 @@ public class NavigatorActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //Lamada al Fragment Principal
+        fragments[0] = new getRestaurantes();
         navigationView.setCheckedItem(R.id.nav_ver_restaurantes);
         FragmentManager ft = getSupportFragmentManager();
-        ft.beginTransaction().replace(R.id.content_frame, new getRestaurantes()).commit();
+        ft.beginTransaction().replace(R.id.content_frame, fragments[0]).commit();
     }
 
     @Override
@@ -123,21 +125,18 @@ public class NavigatorActivity extends AppCompatActivity
         Fragment Activity = null;
 
         if (id == R.id.nav_ver_restaurantes) {
-            if (fragments[0] == null) {
-                Activity = new getRestaurantes();
-                fragments[0] = Activity;
-            } else Activity = fragments[0];
+            Activity = fragments[0] = fragments[0] == null ? new getRestaurantes() : fragments[0];
         } else if (id == R.id.nav_sesion) {
             if (Sesion.isLoggedIn()) {
                 Sesion.cerrarSesion();
-                Toast.makeText(getApplicationContext(), "Vuelva Pronto!!!", Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(), "Vuelva Pronto!!!", Toast.LENGTH_LONG).show();
                 mostrarInfoUsuario();
+                Activity = fragments[0];
             } else {
-                if (fragments[1] == null) {
-                    Activity = LoginFragment.newInstance(this);
-                    fragments[1] = Activity;
-                } else Activity = fragments[1];
+                Activity = fragments[1] = fragments[1] == null ? LoginFragment.newInstance(this) : fragments[1];
             }
+        } else if (id == R.id.nav_reservaciones) {
+            Activity = fragments[2] = fragments[2] == null ? new ReservacionesFragment() : fragments[2];
         }
 
         if (Activity != null) {
@@ -158,8 +157,10 @@ public class NavigatorActivity extends AppCompatActivity
             sCorreo = temp.getCorreo();
             sNombre = temp.getNombre();
             IniciarSesion.setTitle("Cerrar Sesión");
+            Reservaciones.setVisible(true);
         } else {
             IniciarSesion.setTitle("Iniciar Sesión");
+            Reservaciones.setVisible(false);
         }
         this.Nombre.setText(sNombre);
         this.Correo.setText(sCorreo);

@@ -1,6 +1,7 @@
 package mx.edu.itlp.registraya;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -103,7 +104,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Web
         super.onAttach(context);
 
 
-
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
@@ -125,7 +125,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Web
             cliente = new WebService(this);
             cliente.HacerLogin(Correo.getText().toString(), Contraseña.getText().toString());
         } else {
-
+            Intent temp = new Intent(getContext(), RegistrarActivity.class);
+            startActivity(temp);
         }
     }
 
@@ -144,7 +145,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Web
                 Snackbar.make(Registrar, msgError, Snackbar.LENGTH_LONG).show();
                 showLogin(true);
             } else {
-                //Toast.makeText(getContext(), Res, Toast.LENGTH_LONG).show();
                 mListener.onFragmentInteraction(Res);
             }
         } else {

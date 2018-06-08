@@ -18,11 +18,20 @@ public class Sesion {
     private static final String USER_LASTNAME = "UserLastName";
     private static final String IP = "IP_ADDRESS";
     private static final String Puerto = "PORT";
+    private static boolean REQUIERE_TARJETA = false;
 
     public static void initSesionManager(Context applicationContext) {
         sharedPreferences = applicationContext.getSharedPreferences(PACK_NAME, Context.MODE_PRIVATE);
         CONSTANTES.IP_SERVIDOR = getIP();
         CONSTANTES.PUERTO_SERVIDOR = getPuerto();
+    }
+
+    public static void setTarjetaRequerida(boolean Requerido) {
+        REQUIERE_TARJETA = Requerido;
+    }
+
+    public static boolean getTarjetaRequerida() {
+        return REQUIERE_TARJETA;
     }
 
     private static boolean sesionManagerIniciado() {

@@ -1,5 +1,6 @@
 package mx.edu.itlp.registraya;
 
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,13 +22,14 @@ import mx.edu.itlp.Datos.Producto;
 import mx.edu.itlp.Datos.ProductoAdapter;
 import mx.edu.itlp.Datos.Restaurante;
 import mx.edu.itlp.Datos.RestauranteAdapter;
+import mx.edu.itlp.Datos.Sesion;
 import mx.edu.itlp.WebService.WebService;
 import mx.edu.itlp.WebService.WebServiceListener;
 
 public class MenuActivity extends AppCompatActivity implements WebServiceListener, ProductoAdapter.CuentaTotalListener {
     Restaurante restaurante;
     WebService Cliente;
-    Button btnReintentar;
+    Button btnReintentar, btnReservar;
     ProgressBar progressBar;
     TextView Total;
     float TotalCuenta;
@@ -46,6 +48,19 @@ public class MenuActivity extends AppCompatActivity implements WebServiceListene
         ((ImageView) findViewById(R.id.c2)).setBackgroundColor(Producto.getColor(1));
         ((ImageView) findViewById(R.id.c3)).setBackgroundColor(Producto.getColor(2));
         ((ImageView) findViewById(R.id.c4)).setBackgroundColor(Producto.getColor(3));
+        findViewById(R.id.btnReservar).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Sesion.isLoggedIn()) {
+                    Sesion.setTarjetaRequerida(TotalCuenta > 0);
+                    Intent temp = new Intent(getApplicationContext(), Reservar.class);
+                    temp.putExtra("Restaurante", restaurante);
+                    startActivity(temp);
+                } else {
+                    Toast.makeText(getApplicationContext(), "No ha iniciado Sesión", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
         Lista.setEmptyView(findViewById(R.id.btnReintentarContenedor2));
         btnReintentar.setOnClickListener(new View.OnClickListener() {
             @Override

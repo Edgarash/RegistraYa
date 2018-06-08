@@ -1,15 +1,15 @@
 <?php
     require_once "lib/nusoap.php";
-    $IP = "Servidor:80";
-    #$IP = "Localhost:8080";
+    #$IP = "Servidor:80";
+    $IP = "Localhost:8080";
     $cliente = new nusoap_client("http://".$IP."/WebService.php?wsdl");
     $error = $cliente->getError();
     if ($error) {
         echo 'ERROR';
     } else {
         $result = $cliente->call(
-            'getMenu', array(
-                '4',
+            'getReservaciones', array(
+                'edgar.31896@gmail.com',
             #'lalalolo1221@gmail.com',
             #'3',
             #'2018-06-04 15:00:00',

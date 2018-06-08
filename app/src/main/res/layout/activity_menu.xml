@@ -110,7 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@id/Total">
+            app:layout_constraintBottom_toTopOf="@id/contTotal">
 
             <ListView
                 android:id="@+id/Lista"
@@ -147,14 +147,30 @@
             </android.support.constraint.ConstraintLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/Total"
+        <LinearLayout
+            android:id="@+id/contTotal"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:gravity="center"
-            android:text="Total: $"
-            android:textSize="30sp"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/Total"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Total: $"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/btnReservar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:text="Reservar" />
+
+        </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>

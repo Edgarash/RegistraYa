@@ -45,4 +45,5 @@
     <string name="bebidas">Bebidas</string>
     <string name="platillos">Platillos</string>
     <string name="entradas">Entradas</string>
+    <string name="nav_reservaciones">Ver Reservaciones</string>
 </resources>

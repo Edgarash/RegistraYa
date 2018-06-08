@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -15,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -22,8 +23,11 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import mx.edu.itlp.Datos.Reservacion;
+import mx.edu.itlp.Datos.ReservacionAdapter;
 import mx.edu.itlp.Datos.Restaurante;
 import mx.edu.itlp.Datos.RestauranteAdapter;
+import mx.edu.itlp.Datos.Sesion;
 import mx.edu.itlp.WebService.WebService;
 import mx.edu.itlp.WebService.WebServiceListener;
 
@@ -31,23 +35,21 @@ import mx.edu.itlp.WebService.WebServiceListener;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link getRestaurantes.OnFragmentInteractionListener} interface
+ * {@link ReservacionesFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link getRestaurantes#newInstance} factory method to
+ * Use the {@link ReservacionesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class getRestaurantes extends Fragment implements WebServiceListener, View.OnClickListener {
-    View vista;
-    ConstraintLayout btnReintentarParent;
-    Button btnReintentar;
-    ListView ListaDeRestaurantes;
-    ProgressBar Barrita;
-    WebService Cliente;
-
+public class ReservacionesFragment extends Fragment implements WebServiceListener, View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    WebService Cliente;
+    ConstraintLayout btnReintentarParent;
+    Button btnReintentar;
+    ListView ListaDeReervaciones;
+    ProgressBar Barrita;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -55,7 +57,7 @@ public class getRestaurantes extends Fragment implements WebServiceListener, Vie
 
     private OnFragmentInteractionListener mListener;
 
-    public getRestaurantes() {
+    public ReservacionesFragment() {
         // Required empty public constructor
     }
 
@@ -65,11 +67,11 @@ public class getRestaurantes extends Fragment implements WebServiceListener, Vie
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment getRestaurantes.
+     * @return A new instance of fragment ReservacionesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static getRestaurantes newInstance(String param1, String param2) {
-        getRestaurantes fragment = new getRestaurantes();
+    public static ReservacionesFragment newInstance(String param1, String param2) {
+        ReservacionesFragment fragment = new ReservacionesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -89,22 +91,20 @@ public class getRestaurantes extends Fragment implements WebServiceListener, Vie
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        View v = view;
-        ListaDeRestaurantes = v.findViewById(R.id.Restaurantes);
-        Barrita = v.findViewById(R.id.progressBar);
-        btnReintentarParent = v.findViewById(R.id.btnReintentarContenedor);
-        btnReintentar = v.findViewById(R.id.btnReintenetar);
-        ListaDeRestaurantes.setEmptyView(btnReintentarParent);
+        ListaDeReervaciones = view.findViewById(R.id.Restaurantes);
+        Barrita = view.findViewById(R.id.progressBar);
+        btnReintentarParent = view.findViewById(R.id.btnReintentarContenedor);
+        btnReintentar = view.findViewById(R.id.btnReintenetar);
+        ListaDeReervaciones.setEmptyView(btnReintentarParent);
         btnReintentar.setOnClickListener(this);
-        BuscarRestaurantes();
+        BuscarReservaciones();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        vista = inflater.inflate(R.layout.activity_main, container, false);
-        return vista;
+        return inflater.inflate(R.layout.fragment_reservaciones, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -128,12 +128,8 @@ public class getRestaurantes extends Fragment implements WebServiceListener, Vie
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        Cliente.cancel(true);
-    }
-
-    public void BuscarRestaurantes() {
-        Cliente = new WebService(this);
-        Cliente.obtenerRestaurante();
+        if (Cliente != null)
+            Cliente.cancel(true);
     }
 
     @Override
@@ -144,19 +140,38 @@ public class getRestaurantes extends Fragment implements WebServiceListener, Vie
     @Override
     public void onTerminar(Object Resultado) {
         if (Resultado != null) {
-            Gson gson = new Gson();
-            Type tipoListaRestaurante = new TypeToken<List<Restaurante>>() {
-            }.getType();
-            List<Restaurante> res = gson.fromJson((String) Resultado, tipoListaRestaurante);
-            RestauranteAdapter AdaptadorRes = new RestauranteAdapter(res, getContext());
-            ListaDeRestaurantes.setAdapter(AdaptadorRes);
+            String Res = (String) Resultado;
+            if (Res.equals("SIN RESERVACIONES")) {
+                //Mostrar que no tiene reservaciones
+                mostrarSinReservacion();
+            } else {
+                Gson gson = new Gson();
+                Type tipoListaReservaciones = new TypeToken<List<Reservacion>>() {
+                }.getType();
+                List<Reservacion> res = gson.fromJson((String) Resultado, tipoListaReservaciones);
+                ReservacionAdapter AdaptadorRes = new ReservacionAdapter(res, getContext());
+                ListaDeReervaciones.setAdapter(AdaptadorRes);
+            }
             showReintentar(false);
         } else {
-            Snackbar.make(ListaDeRestaurantes, "Hubo un error al conectar con la base de datos", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(ListaDeReervaciones, "Hubo un error al conectar con la base de datos", Snackbar.LENGTH_LONG).show();
             showReintentar(true);
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        BuscarReservaciones();
+    }
+
+    private void BuscarReservaciones() {
+        if (Sesion.isLoggedIn()) {
+            Cliente = new WebService(this);
+            Cliente.getReservaciones(Sesion.getUsuario().getCorreo());
+        } else {
+            Toast.makeText(getContext(), "No ha iniciado sesión", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void showReintentar(final boolean Mostrar) {
         getActivity().runOnUiThread(new Runnable() {
@@ -174,9 +189,15 @@ public class getRestaurantes extends Fragment implements WebServiceListener, Vie
         });
     }
 
-    @Override
-    public void onClick(View v) {
-        BuscarRestaurantes();
+    private void mostrarSinReservacion() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Barrita.setVisibility(View.GONE);
+                btnReintentar.setVisibility(View.GONE);
+                ((TextView) getActivity().findViewById(R.id.NoReservacion)).setText("NO TIENE RESERVACIONES");
+            }
+        });
     }
 
     /**

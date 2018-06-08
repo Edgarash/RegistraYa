@@ -241,6 +241,58 @@
         }
     }
 
+    $Server->Register(
+        'getReservaciones',                          #Nombre del Método
+        array(
+            'Correo' => 'xsd:string',
+            'PASSWS' => 'xsd:string'
+        ),                                  #Parámetros de Entrada  
+        array(
+            'return' => 'xsd:string'        #Parámetros de Salida
+        ),
+        'RegistraYA',                       #Namespace
+        'RegistraYA/getReservaciones',               #SOAPaction
+        'rpc',                              #Style
+        'encoded',                          #Use
+        'Obtiene las reservaciones 
+        ligadas a un correo registrado.'    #Documentacion
+    );
+
+    function getReservaciones($Correo, $PASSWS) {
+        if ($PASSWS == 'RegistraYAMovil') {
+            if(validarCorreo($Correo)) {
+                if (existeUsuario($Correo)) {
+                    $Link = ConectarBD();
+                    $SQL = 'CALL getReservaciones(:Correo);';
+                    $STMT = $Link->prepare($SQL);
+                    $STMT->bindParam(':Correo', $Correo);
+                    $STMT->execute();
+                    if ($STMT->rowCount() > 0) {
+                        $Resultado = array();
+                        while ($Fila = $STMT->fetch()) {
+                            $Reservacion = new stdClass();
+                            $Reservacion->ID = $Fila['ID'];
+                            $Reservacion->Fecha = $Fila['Fecha'];
+                            $Reservacion->Mesa = $Fila['Mesa'];
+                            $Reservacion->Restaurante = $Fila['Nombre'];
+                            $Reservacion->Colonia = $Fila['Colonia'];
+                            $Resultado[] = $Reservacion;
+                        }
+                        return json_encode($Resultado);
+                    } else {    //NO HUBO RESERVACIONES
+                        return 'SIN RESERVACIONES';
+                    }
+                } else {    //USUARIO NO EXISTE
+                    return getError(2, $Correo);
+                }
+            } else {    //CORREO NO VALIDO
+                return getError(3, $Correo);
+            }
+        } else {    //PASSWS NO VALIDO
+            return getError(100, $PASSWS);
+        }
+    }
+
     function getError($noError, $Cadena) {
         switch ($noError) {
             case 1:
