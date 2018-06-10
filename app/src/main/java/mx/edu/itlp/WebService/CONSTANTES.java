@@ -1,7 +1,7 @@
 package mx.edu.itlp.WebService;
 
 public class CONSTANTES {
-    public static String IP_SERVIDOR = "192.168.1.64";
+    public static String IP_SERVIDOR = "189.172.173.72";
     public static String PUERTO_SERVIDOR = "8080";
 
     public static String getIpServidor() {

@@ -81,7 +81,7 @@ public class Sesion {
 
     public static String getIP() {
         sesionManagerIniciado();
-        return sharedPreferences.getString(IP, "192.168.1.70");
+        return sharedPreferences.getString(IP, CONSTANTES.IP_SERVIDOR);
     }
 
     public static void setIP(String Dir_IP) {
@@ -92,7 +92,7 @@ public class Sesion {
 
     public static String getPuerto() {
         sesionManagerIniciado();
-        return sharedPreferences.getString(Puerto, "80");
+        return sharedPreferences.getString(Puerto, CONSTANTES.PUERTO_SERVIDOR);
     }
 
     public static void setPuerto(String Port) {
