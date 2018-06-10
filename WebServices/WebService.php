@@ -101,9 +101,9 @@
                         }
                     } else {    //CONTRASEÑA NO VALIDA
                         if (strlen($PASSWS) < 8) 
-                            return getError(12, $Password);
+                            return getError(12);
                         else
-                            return getError(10, $Password);
+                            return getError(10);
                     }
                 } else {    //APELLIDOS NO VALIDOS
                     return getError(30, $Apellidos);
@@ -242,7 +242,7 @@
     }
 
     $Server->Register(
-        'getReservaciones',                          #Nombre del Método
+        'getReservaciones',                 #Nombre del Método
         array(
             'Correo' => 'xsd:string',
             'PASSWS' => 'xsd:string'
@@ -251,7 +251,7 @@
             'return' => 'xsd:string'        #Parámetros de Salida
         ),
         'RegistraYA',                       #Namespace
-        'RegistraYA/getReservaciones',               #SOAPaction
+        'RegistraYA/getReservaciones',      #SOAPaction
         'rpc',                              #Style
         'encoded',                          #Use
         'Obtiene las reservaciones 
@@ -308,10 +308,10 @@
                 return 'ERROR 004: EL CORREO "'.$Cadena.'" NO SE PUDO REGISTRAR.';
                 break;
             case 10:
-                return 'ERROR 010: LA CONTRASEÑA "'.$Cadena.'" NO ES VÁLIDA, DEBE TENER COMO MÍNIMO 8 CARACTERES, UNA LETRA Y UN NÚMERO..';
+                return 'ERROR 010: LA CONTRASEÑA NO ES VÁLIDA, DEBE TENER COMO MÍNIMO 8 CARACTERES, UNA LETRA Y UN NÚMERO.';
                 break;
             case 11:
-                return 'ERROR 011: LA CONTRASEÑA "'.$Cadena.'" NO ES CORRECTA.';
+                return 'ERROR 011: LA CONTRASEÑA NO ES CORRECTA.';
                 break;
             case 12:
                 return 'ERROR 012: LA CONTRASEÑA DEBE TENER MÍNIMO 8 CARACTERES, UNA LETRA Y UN NÚMERO.';
@@ -361,7 +361,7 @@
     }
 
     function validarPassword($Password) {
-        if (preg_match("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!$%@#£€*?&]{8,}$/", $Password)) {
+        if (preg_match("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!$%@#£€*?&]{8,}$/", decrypt($Password))) {
             return true;
         } else {
             return false;
@@ -374,6 +374,20 @@
         } else {
             return false;
         }
+    }
+
+    function decrypt($sStr) {
+        $sKey = "Michell#5Michell";
+        $decrypted= mcrypt_decrypt(
+        MCRYPT_RIJNDAEL_128,
+        $sKey, 
+        base64_decode($sStr), 
+        MCRYPT_MODE_ECB
+        );
+        $dec_s = strlen($decrypted); 
+        $padding = ord($decrypted[$dec_s-1]); 
+        $decrypted = substr($decrypted, 0, -$padding);
+        return $decrypted;
     }
 
     if ( !isset( $HTTP_RAW_POST_DATA ) ) $HTTP_RAW_POST_DATA = file_get_contents( 'php://input' );

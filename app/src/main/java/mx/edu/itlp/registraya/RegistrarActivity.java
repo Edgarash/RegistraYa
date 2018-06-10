@@ -71,20 +71,19 @@ public class RegistrarActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onTerminar(Object Resultado) {
-
         if (Resultado != null) {
             String Res = (String) Resultado;
             if (Res.substring(0, 5).equals("ERROR")) {
                 String noError = Res.substring(6, 9);
                 String msgError = Res.substring(10);
                 Snackbar.make(Registrar, msgError, Snackbar.LENGTH_LONG).show();
-
+                showRegistrar(true);
             } else {
                 Toast.makeText(getApplicationContext(), Res, Toast.LENGTH_LONG).show();
                 finish();
             }
         } else {
-            Snackbar.make(Registrar, "No hubo respuesta del servidor", Snackbar.LENGTH_LONG);
+            Snackbar.make(Registrar, "No hubo respuesta del servidor", Snackbar.LENGTH_LONG).show();
             showRegistrar(true);
         }
     }

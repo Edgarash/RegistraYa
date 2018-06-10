@@ -165,9 +165,10 @@
 
             <Button
                 android:id="@+id/btnReservar"
+                android:background="@drawable/background_signup"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="3"
+                android:layout_weight="2.5"
                 android:text="Reservar" />
 
         </LinearLayout>
